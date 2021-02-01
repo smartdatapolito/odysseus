@@ -1,7 +1,7 @@
 sim_general_conf_grid = {
 
     # Run configuration
-    "city": ["Torino", "Milano", "Vancouver"],
+    "city": ["Torino"],
     "sim_run_mode": ["single_run"],
 
     "data_source_id": ["big_data_db"],
@@ -18,7 +18,7 @@ sim_general_conf_grid = {
     # Time general parameters
     "year": [2017],
     "month_start": [10],
-    "month_end": [13],
+    "month_end": [11],
 
     "save_history": [True]
 }
