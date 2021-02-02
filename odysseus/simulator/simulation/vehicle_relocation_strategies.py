@@ -134,8 +134,9 @@ class VehicleRelocationStrategy(VehicleRelocationPrimitives):
 
             for i in range(n):
                 relocation_zone_id = gen_relocation_zone(next_hour_kde)
-                while relocation_zone_id not in self.simInput.valid_zones:
+                while (relocation_zone_id not in self.simInput.valid_zones) or (relocation_zone_id in self.starting_zone_ids) :
                     relocation_zone_id = gen_relocation_zone(next_hour_kde)
+
                 ending_zone_ids.append(relocation_zone_id)
                 n_dropped_vehicles_list.append(1)
 
@@ -247,6 +248,7 @@ class VehicleRelocationStrategy(VehicleRelocationPrimitives):
 
         starting_zone_ids, n_picked_vehicles_list = self.choose_starting_zone(daytype=daytype, hour=hour,
                                                                               n=n_relocations)
+        self.starting_zone_ids=starting_zone_ids
         ending_zone_ids, n_dropped_vehicles_list = self.choose_ending_zone(daytype=daytype, hour=hour, n=n_relocations)
 
         for i in range(min(n_relocations, len(starting_zone_ids), len(ending_zone_ids))):
