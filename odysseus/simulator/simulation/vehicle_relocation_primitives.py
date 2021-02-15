@@ -36,6 +36,8 @@ class VehicleRelocationPrimitives:
 
 		self.simInput = sim.simInput
 
+		self.start = sim.start
+
 		self.vehicles_soc_dict = sim.vehicles_soc_dict
 
 		self.vehicles_list = sim.vehicles_list
@@ -62,7 +64,7 @@ class VehicleRelocationPrimitives:
 
 		self.scheduled_vehicle_relocations = {}
 
-	def relocate_vehicle(self, vehicle_relocation):
+	def relocate_vehicle(self, vehicle_relocation, move_vehicles = False):
 
 		# soc_delta = VehicleRelocationPrimitives.get_cr_soc_delta(vehicle_relocation["start_zone_id"],
 		# vehicle_relocation["end_zone_id"], vehicle)
@@ -71,7 +73,7 @@ class VehicleRelocationPrimitives:
 
 		vehicle_relocation["distance"] = self.get_relocation_distance(vehicle_relocation)
 
-		self.pick_up_vehicle(vehicle_relocation)
+		self.pick_up_vehicle(vehicle_relocation,move_vehicles)
 
 		# self.available_vehicles_dict[vehicle_relocation["start_zone_id"]].remove(
 		# 	vehicle_relocation["vehicle_id"]
@@ -85,7 +87,7 @@ class VehicleRelocationPrimitives:
 			yield self.env.timeout(vehicle_relocation["duration"])
 			self.n_vehicles_relocating -= 1
 
-		self.drop_off_vehicle(vehicle_relocation)
+		self.drop_off_vehicle(vehicle_relocation, move_vehicles)
 
 		# self.vehicles_zones[vehicle_relocation["vehicle_id"]] = vehicle_relocation["end_zone_id"]
 		#
@@ -120,15 +122,33 @@ class VehicleRelocationPrimitives:
 			distance = self.simInput.sim_general_conf["bin_side_length"]
 		return distance
 
-	def pick_up_vehicle(self, vehicle_relocation):
+	def pick_up_vehicle(self, vehicle_relocation,move_vehicles=False):
 		self.zone_dict[vehicle_relocation["start_zone_id"]].remove_vehicle(
 			vehicle_relocation["start_time"]
 		)
+		if move_vehicles:
+			starting_zone_id = vehicle_relocation["start_zone_id"]
+			relocated_vehicles = vehicle_relocation["vehicle_ids"]
 
-	def drop_off_vehicle(self, vehicle_relocation):
+		for vehicle in relocated_vehicles:
+			if vehicle in self.available_vehicles_dict[starting_zone_id]:
+				self.available_vehicles_dict[starting_zone_id].remove(vehicle)
+			if vehicle in self.vehicles_zones:
+				del self.vehicles_zones[vehicle]
+
+
+	def drop_off_vehicle(self, vehicle_relocation,move_vehicles=False):
 		self.zone_dict[vehicle_relocation["end_zone_id"]].add_vehicle(
 			vehicle_relocation["start_time"]
 		)
+		if move_vehicles:
+			ending_zone_id = vehicle_relocation["end_zone_id"]
+			relocated_vehicles = vehicle_relocation["vehicle_ids"]
+
+			for vehicle in relocated_vehicles:
+				self.available_vehicles_dict[ending_zone_id].append(vehicle)
+				self.vehicles_zones[vehicle] = ending_zone_id
+
 
 	def get_timeout(self, origin_id, destination_id):
 		distance = get_od_distance(

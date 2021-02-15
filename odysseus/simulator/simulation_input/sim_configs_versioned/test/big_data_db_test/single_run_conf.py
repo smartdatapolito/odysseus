@@ -59,7 +59,8 @@ sim_scenario_conf = {
 			"end": "kde_sampling",
 		}.items()),
 	"vehicle_scheduled_relocation_triggers": frozenset({
-		"post_trip": True,
+		"post_trip": False,
+		"post_schedule_gen": True,
 	}.items()),
 
 	"n_relocation_workers": 12,
