@@ -45,9 +45,9 @@ sim_scenario_conf_grid = {
 	"scooter_relocation": [False],
 	"scooter_relocation_strategy": [""],
 
-	"vehicle_relocation": [False],
+	"vehicle_relocation": [True],
 	"vehicle_relocation_strategy": ["only_scheduled"],
-    "vehicle_relocation_scheduling": [False],
+    "vehicle_relocation_scheduling": [True],
 	"vehicle_relocation_technique": [frozenset({
 			"start": "aggregation",
 			# "start_demand_weight": 0.9,

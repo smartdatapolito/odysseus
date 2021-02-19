@@ -59,6 +59,7 @@ sim_scenario_conf_grid = {
 	"vehicle_scheduled_relocation_triggers":[ frozenset({
         "post_charge": False,
         "post_trip": True,
+        "post_schedule_gen": True,
     }.items())],
     "n_relocation_workers":[1],
     "avg_relocation_speed": [20]

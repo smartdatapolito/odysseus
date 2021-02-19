@@ -103,6 +103,8 @@ class SimStats():
 			self.sim_stats.loc["fraction_deaths_unsatisfied"] = 0
 
 		self.sim_stats.loc["n_charges"] = sim.chargingStrategy.n_charges
+		self.sim_stats.loc["cum_relo_khw"] = sim.chargingStrategy.cum_relo_khw
+		self.sim_stats.loc["tot_charging_energy"] = sim.chargingStrategy.tot_charging_energy
 
 		self.sim_stats.loc["tot_mobility_distance"] = sim.tot_mobility_distance
 		self.sim_stats.loc["tot_mobility_duration"] = sim.tot_mobility_duration

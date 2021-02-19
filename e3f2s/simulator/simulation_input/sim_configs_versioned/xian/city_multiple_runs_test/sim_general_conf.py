@@ -20,5 +20,5 @@ sim_general_conf_grid = {
     "month_start": [10],
     "month_end": [11],
 
-    "save_history": [False]
+    "save_history": [True]
 }

@@ -55,6 +55,8 @@ class ChargingPrimitives:
 					)
 
 		self.n_charges = 0
+		self.cum_relo_khw = 0
+		self.tot_charging_energy = 0
 		self.sim_charges = []
 		self.sim_unfeasible_charge_bookings = []
 
@@ -173,6 +175,8 @@ class ChargingPrimitives:
 		if "save_history" in self.simInput.demand_model_config:
 			if self.simInput.demand_model_config["save_history"]:
 				self.sim_charges += [charge]
+		self.cum_relo_khw += charge["cr_soc_delta_kwh"]
+		self.tot_charging_energy += charge["soc_delta_kwh"]
 		self.n_charges += 1
 
 	def check_system_charge(self, booking_request, vehicle, charging_strategy):
