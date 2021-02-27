@@ -55,8 +55,11 @@ sim_scenario_conf = {
 	"vehicle_relocation_strategy": "only_scheduling",
 	"vehicle_relocation_scheduling": True,
 	"vehicle_relocation_technique": frozenset({
-			"start": "aggregation",
-			"end": "kde_sampling",
+			"start": "delta",
+			"start_demand_weight": 0.5,
+			"end": "delta",
+			"end_demand_weight": 0.5,
+			"end_window_width": 1
 		}.items()),
 	"vehicle_scheduled_relocation_triggers": frozenset({
 		"post_trip": False,
