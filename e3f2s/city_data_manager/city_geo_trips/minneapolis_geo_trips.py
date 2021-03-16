@@ -7,8 +7,10 @@ from e3f2s.city_data_manager.city_data_source.geo_data_source.minneapolis_center
 from e3f2s.city_data_manager.city_data_source.geo_data_source.minneapolis_trails_bikes import MinneapolisTrailsBikes
 from e3f2s.city_data_manager.city_geo_trips.city_geo_trips import CityGeoTrips
 from e3f2s.utils.geospatial_utils import get_random_point_from_linestring
+import streamlit as st
 
 
+@st.cache
 class MinneapolisGeoTrips(CityGeoTrips):
 
     def __init__(self, city_name="Minneapolis", trips_data_source_id="city_of_minneapolis", year=2019, month=7):
