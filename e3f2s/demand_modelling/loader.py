@@ -3,7 +3,7 @@ import geopandas as gpd
 import pandas as pd
 import shapely
 
-from e3f2s.city_data_manager.config.config import *
+from e3f2s.city_data_manager.config.config import *  
 
 
 class Loader:
