@@ -129,8 +129,6 @@ def get_most_used_cars(city,data,start_date,end_date,data_source_id):
 
     return  px.bar(most_used, x="occurance", y='plate',orientation='h')
 
-
-
 @st.cache(allow_output_mutation=True)
 def get_average_duration(city,data,start_date,end_date,data_source_id):
     start_year = start_date.year
@@ -160,11 +158,6 @@ def get_average_duration(city,data,start_date,end_date,data_source_id):
 
     return fig
 
-
-
-
-
-
 # @st.cache(allow_output_mutation=True)
 # def bubble_plot(city,data,start_date,end_date,data_source_id,od):
 
@@ -172,8 +165,7 @@ def get_average_duration(city,data,start_date,end_date,data_source_id):
 #         data = data.rename(columns={'start_latitude':'lat', 'start_longitude':'lon', 'start_time':'datetime'}).filter(["lat","lon"],axis=1)
 #     else:
 #         data = data.rename(columns={'end_latitude':'lat', 'end_longitude':'lon', 'end_time':'datetime'}).filter(["lat","lon"],axis=1)
-        
-    
+
 #     data["total_from_point"]=1
 #     data_results = data.groupby(by=["lat","lon"]).sum(["total_from_point"])
 #     data_results["lat"] = [index[0] for index,row in data_results.iterrows()]
@@ -205,11 +197,8 @@ def get_average_duration(city,data,start_date,end_date,data_source_id):
 def bubble_plot_2(city,data_gdf,start_date,end_date,data_source_id):
     
     data = pd.DataFrame(data_gdf)
-
     data = data.rename(columns={'start_latitude':'lat', 'start_longitude':'lon'}).filter(["lat","lon","start_time","end_time"],axis=1)
     data["end_time_datatime"] = pd.to_datetime(data['end_time'], format= "%Y-%m-%d %H:%M:%S", utc=True)
-
-
 
     start_date_dt = datetime.combine(start_date, datetime.min.time())
     start_date_dt_aware = pytz.utc.localize(start_date_dt)
@@ -247,4 +236,70 @@ def bubble_plot_2(city,data_gdf,start_date,end_date,data_source_id):
 
     return  fig
 
+@st.cache(allow_output_mutation=True)
+#def bubble_plot_folium(city,data_gdf,start_date,end_date,data_source_id):
+    # data = pd.DataFrame(data_gdf)
+    # data = data.rename(columns={'start_latitude': 'lat', 'start_longitude': 'lon'}).filter(
+    #     ["lat", "lon", "start_time", "end_time"], axis=1)
+    # data["end_time_datatime"] = pd.to_datetime(data['end_time'], format="%Y-%m-%d %H:%M:%S", utc=True)
+    #
+    # start_date_dt = datetime.combine(start_date, datetime.min.time())
+    # start_date_dt_aware = pytz.utc.localize(start_date_dt)
+    #
+    # end_date_dt = datetime.combine(end_date, datetime.min.time())
+    # end_date_dt_aware = pytz.utc.localize(end_date_dt)
+    #
+    # mask = (data['start_time'] > start_date_dt_aware) & (data['end_time_datatime'] < end_date_dt_aware)
+    # data = data.loc[mask]
+    #
+    # data["total_from_point"] = 1
+    # data = data.groupby(by=["lat", "lon"]).sum(["total_from_point"])
+    #
+    # data["lat"] = [index[0] for index, row in data.iterrows()]
+    # data["lon"] = [index[1] for index, row in data.iterrows()]
+
+def bubble_plot_folium(city, data, od):
+    if od == 'origin':
+        data = data.rename(columns={'start_latitude': 'lat', 'start_longitude': 'lng', 'start_time': 'datetime'})
+    else:
+        data = data.rename(columns={'end_latitude': 'lat', 'end_longitude': 'lng', 'end_time': 'datetime'})
+
+    locations = {
+        "Torino": [45.0781, 7.6761],
+        "Amsterdam": [52.3676, 4.9041],
+        "Austin": [30.2672, -97.7431],
+        "Berlin": [52.5200, 13.4050],
+        "Calgary": [51.0447, -114.0719],
+        "Columbus": [39.9612, -82.9988],
+        "Denver": [39.7392, -104.9903],
+        "Firenze": [43.7696, 11.2558],
+        "Frankfurt": [50.1109, 8.6821],
+        "Hamburg": [53.5511, 9.9937]
+    }
+    cities = locations.keys()
+
+    _map = folium.Map(location=locations[city],
+                      zoom_start=6)
+
+    # Filter the DF for rows, then columns, then remove NaNs
+    geo_data = data[['lat', 'lng']]
+    geo_data = geo_data.dropna(axis=0, subset=['lat', 'lng'])
+    geo_data["total_from_point"] = 1
+    plot_data = geo_data.groupby(by=["lat", "lng"]).sum(["total_from_point"])
+    plot_data["lat"] = [index[0] for index,row in plot_data.iterrows()]
+    plot_data["lon"] = [index[1] for index,row in plot_data.iterrows()]
+
+    for i in range(0, len(plot_data)):
+        folium.CircleMarker(
+            radius=float(plot_data.iloc[i]['total_from_point']),
+            location=[plot_data.iloc[i]["lat"], plot_data.iloc[i]["lon"]],
+            #popup=plot_data.iloc[i]['city'],
+            color='#69b3a2',
+            fill=True,
+            fill_color='#69b3a2'
+        ).add_to(_map)
+
+    #print(plot_data)
+
+    return _map
 

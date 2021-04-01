@@ -1,10 +1,6 @@
 import pandas as pd
 import streamlit as st
-
-
 from odysseus.dashboards.overview.get_widgets import *
-
-
 from odysseus.city_data_manager.data_transormer_cdm.transformer_cdm import *
 
 @st.cache(allow_output_mutation=True)

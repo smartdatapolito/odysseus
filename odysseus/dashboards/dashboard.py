@@ -112,6 +112,12 @@ def load_dashboard():
     #     _max_width_()
     #     load_charts_with_menu(bookings_by_hour)
 
+    # Make an empty map
+
+    orig_map = bubble_plot_folium(city_name, df_origin, 'origin')
+    # La bubble map funziona ma è lenta
+    # folium_static(orig_map)
+
     st.markdown(
         """
         <center class="mid-small-font">General Information on usage</center>
@@ -125,5 +131,5 @@ def load_dashboard():
     avg_duration = get_average_duration(city_name,df_origin,start,stop,selected_source).update_layout(width=1500,height=600)
     st.write(avg_duration)
 
-    bubble_origins = bubble_plot(city_name,df_origin,start,stop,selected_source)#.update_layout(width=1500,height=600)
-    st.write(bubble_origins)
+    # bubble_origins = bubble_plot_2(city_name,df_origin,start,stop,selected_source)#.update_layout(width=1500,height=600)
+    # st.write(bubble_origins)
