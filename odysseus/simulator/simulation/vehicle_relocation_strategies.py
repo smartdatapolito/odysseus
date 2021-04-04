@@ -1,4 +1,4 @@
-from e3f2s.simulator.simulation.vehicle_relocation_primitives import *
+from odysseus.simulator.simulation.vehicle_relocation_primitives import *
 import numpy as np
 
 class VehicleRelocationStrategy(VehicleRelocationPrimitives):
@@ -153,35 +153,24 @@ class VehicleRelocationStrategy(VehicleRelocationPrimitives):
 
         if technique == "delta":  # demand proxy: origin scores, current status proxy: aggregation
 
-            next_hour_origin_scores = self.simInput.origin_scores[daytype][(hour + 1) % 24]
+            next_hour_origin_scores = self.simInput.avg_out_flows_train[daytype][(hour + 1) % 24]
+            next_hour_destination_scores = self.simInput.avg_in_flows_train[daytype][(hour+1)%24]
 
-            if "end_demand_weight" in dict(self.simInput.sim_scenario_conf["vehicle_relocation_technique"]):
-                w1 = dict(self.simInput.sim_scenario_conf["vehicle_relocation_technique"])["end_demand_weight"]
-            else:
-                w1 = 0.5
+            delta_by_zone = {}
 
-            w2 = 1 - w1
-
-            delta_by_zone = {
-                k: (2 - abs(w1 - w2)) * (w1 * next_hour_origin_scores[k] - w2 * (len(v) / self.simInput.n_vehicles_sim))
-                for k, v in
-                self.available_vehicles_dict.items()
-            }
+            for zone, vehicles in self.available_vehicles_dict.items():
+                flow_prediction = next_hour_origin_scores[zone]-next_hour_destination_scores[zone]
+                delta = flow_prediction - len(vehicles)
+                delta_by_zone[zone] = delta
 
             delta_by_zone = {
                 k: v for k, v in
                 sorted(delta_by_zone.items(), key=lambda item: item[1])
             }
 
-            if "end_vehicles_factor" in dict(self.simInput.sim_scenario_conf["vehicle_relocation_technique"]):
-                end_vehicles_factor = dict(self.simInput.sim_scenario_conf["vehicle_relocation_technique"])[
-                    "end_vehicles_factor"]
-            else:
-                end_vehicles_factor = 1
-
             for i in range(min(n, len(delta_by_zone))):
                 item = delta_by_zone.popitem()
-                n_dropped_vehicles = int(item[1] * end_vehicles_factor * self.simInput.n_vehicles_sim)
+                n_dropped_vehicles = 1
                 if n_dropped_vehicles:
                     ending_zone_ids.append(item[0])
                     n_dropped_vehicles_list.append(n_dropped_vehicles)
@@ -208,33 +197,23 @@ class VehicleRelocationStrategy(VehicleRelocationPrimitives):
         if technique == "delta":  # demand proxy: origin scores, current status proxy: aggregation
 
             next_hour_origin_scores = self.simInput.avg_out_flows_train[daytype][(hour + 1) % 24]
+            next_hour_destination_scores = self.simInput.avg_in_flows_train[daytype][(hour + 1) % 24]
 
-            if "start_demand_weight" in dict(self.simInput.sim_scenario_conf["vehicle_relocation_technique"]):
-                w1 = dict(self.simInput.sim_scenario_conf["vehicle_relocation_technique"])["start_demand_weight"]
-            else:
-                w1 = 0.5
+            delta_by_zone = {}
 
-            w2 = 1 - w1
-
-            delta_by_zone = {
-                k: w1 * next_hour_origin_scores[k] - w2 * (len(v) / self.simInput.n_vehicles_sim) for k, v in
-                self.available_vehicles_dict.items()
-            }
+            for zone, vehicles in self.available_vehicles_dict.items():
+                flow_prediction = next_hour_origin_scores[zone] - next_hour_destination_scores[zone]
+                delta = flow_prediction - len(vehicles)
+                delta_by_zone[zone] = delta
 
             delta_by_zone = {
                 k: v for k, v in
                 sorted(delta_by_zone.items(), key=lambda item: -item[1])
             }
 
-            if "start_vehicles_factor" in dict(self.simInput.sim_scenario_conf["vehicle_relocation_technique"]):
-                start_vehicles_factor = dict(self.simInput.sim_scenario_conf["vehicle_relocation_technique"])[
-                    "start_vehicles_factor"]
-            else:
-                start_vehicles_factor = 1
-
             for i in range(min(n, len(delta_by_zone))):
                 item = delta_by_zone.popitem()
-                n_picked_vehicles = int(abs(item[1]) * start_vehicles_factor * self.simInput.n_vehicles_sim)
+                n_picked_vehicles = 1
                 if n_picked_vehicles:
                     starting_zone_ids.append(item[0])
                     n_picked_vehicles_list.append(n_picked_vehicles)
