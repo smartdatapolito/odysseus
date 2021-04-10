@@ -173,6 +173,18 @@ def single_run(conf_tuple):
                     "relocation_history.csv"
                 )
             )
+            simOutput.out_flow_predictions.to_csv(
+                os.path.join(
+                    results_path,
+                    "out_flow_predictions.csv"
+                )
+            )
+            simOutput.in_flow_predictions.to_csv(
+                os.path.join(
+                    results_path,
+                    "in_flow_predictions.csv"
+                )
+            )
 
         print(datetime.datetime.now(), city, sim_scenario_name, "results saved!")
 

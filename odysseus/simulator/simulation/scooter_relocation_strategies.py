@@ -420,6 +420,21 @@ class ScooterRelocationStrategy(ScooterRelocationPrimitives):
 
         if pred_out_flows_list and pred_in_flows_list:
 
+            if self.simInput.demand_model_config["save_history"]:
+                # Only predictions with W=1 are saved in history
+                for zone in pred_in_flows_list[0]:
+                    self.in_flow_predictions_list.append({
+                        "time": current_datetime,
+                        "zone_id": zone,
+                        "next_hour_in_flow": pred_in_flows_list[0][zone]
+                    })
+                for zone in pred_out_flows_list[0]:
+                    self.out_flow_predictions_list.append({
+                        "time": current_datetime,
+                        "zone_id": zone,
+                        "next_hour_out_flow": pred_out_flows_list[0][zone]
+                    })
+
             # Choose the maximum number of 'pick up' and 'drop off' zones proposals to be computed
             n_relocations = int(len(self.available_vehicles_dict) / 2)  # an upper bound
             if self.simInput.supply_model_conf["scooter_relocation_strategy"] in ["proactive", "predictive"] \

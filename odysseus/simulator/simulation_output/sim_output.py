@@ -299,6 +299,8 @@ class SimOutput():
 
 			if self.sim_scenario_conf["scooter_relocation"]:
 				self.relocation_history = pd.DataFrame(sim.scooterRelocationStrategy.sim_scooter_relocations)
+				self.out_flow_predictions = pd.DataFrame(sim.scooterRelocationStrategy.out_flow_predictions_list)
+				self.in_flow_predictions = pd.DataFrame(sim.scooterRelocationStrategy.in_flow_predictions_list)
 
 		if "vehicle_relocation" in self.sim_scenario_conf and self.sim_scenario_conf["vehicle_relocation"]:
 			self.sim_stats.loc["n_vehicle_relocations"] = sim.vehicleRelocationStrategy.n_vehicle_relocations

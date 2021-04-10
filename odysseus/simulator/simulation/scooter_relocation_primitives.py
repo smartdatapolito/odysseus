@@ -75,6 +75,9 @@ class ScooterRelocationPrimitives:
         self.ending_zone_ids = []
         self.n_dropped_vehicles_list = []
 
+        self.out_flow_predictions_list = []
+        self.in_flow_predictions_list = []
+
         self.sim_metrics = sim.sim_metrics
 
         self.relocation_workers = []
