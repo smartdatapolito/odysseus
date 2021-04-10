@@ -68,10 +68,17 @@ def single_run(conf_tuple):
             "grid.pickle"
         )
     )
-    simOutput.grid.to_file(
+    simOutput.grid[["geometry"]].to_file(
         os.path.join(
             results_path,
             "grid.dbf"
+        )
+    )
+
+    simOutput.grid.drop("geometry", axis=1).to_csv(
+        os.path.join(
+            results_path,
+            "grid.csv"
         )
     )
 
