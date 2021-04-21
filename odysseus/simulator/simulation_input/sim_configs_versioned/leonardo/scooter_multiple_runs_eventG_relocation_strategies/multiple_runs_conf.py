@@ -37,7 +37,7 @@ sim_scenario_conf_grid = {
     "number of workers": [1000],
 
     "scooter_relocation": [True],
-    "scooter_relocation_strategy": ["reactive_post_charge", "reactive_post_trip", "proactive"],
+    "scooter_relocation_strategy": ["proactive"],
     "scooter_relocation_technique": [
         frozenset({
             "start": "aggregation",
@@ -45,20 +45,15 @@ sim_scenario_conf_grid = {
         }.items()),
         frozenset({
             "start": "delta",
-            "start_demand_weight": 0.5,
-            "start_vehicles_factor": 1,
-            "start_window_width": 1,
             "end": "delta",
-            "end_demand_weight": 0.5,
-            "end_vehicles_factor": 1,
-            "end_window_width": 1,
+            "window_width": 1,
         }.items()),
     ],
 
     "vehicle_relocation": [False],
     "vehicle_relocation_scheduling": [False],
 
-    "n_relocation_workers": range(3, 13),
+    "n_relocation_workers": range(1, 11),
     "avg_relocation_speed": [20],  # km/h
 
     "engine_type": ["electric"],

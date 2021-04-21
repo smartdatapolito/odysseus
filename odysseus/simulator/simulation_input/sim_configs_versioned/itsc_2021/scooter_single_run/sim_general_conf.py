@@ -1,12 +1,12 @@
 sim_general_conf_grid = {
 
     # Run configuration
-    "city": ["Louisville"],
-    "sim_run_mode": ["multiple_runs"],
+    "city": ["Austin"],
+    "sim_run_mode": ["single_run"],
 
     "data_source_id": ["city_open_data"],
     "sim_technique": ["traceB"],
-    "sim_scenario_name": ["scooter_traceB_relocation_strategies_set1_new_delta_no_prof"],
+    "sim_scenario_name": ["scooter_austin_4000vehicles_1worker_simple_heuristic_predictive"],
 
     # Fleet general parameters
     "const_load_factor": [False],
@@ -20,5 +20,5 @@ sim_general_conf_grid = {
     "month_start": [9],
     "month_end": [10],
 
-    "save_history": [False]
+    "save_history": [True]
 }

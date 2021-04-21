@@ -6,7 +6,7 @@ sim_general_conf_grid = {
 
     "data_source_id": ["city_open_data"],
     "sim_technique": ["traceB"],
-    "sim_scenario_name": ["scooter_traceB_no_relocation_set1"],
+    "sim_scenario_name": ["scooter_traceB_no_relocation"],
 
     # Fleet general parameters
     "const_load_factor": [False],

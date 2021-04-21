@@ -38,6 +38,9 @@ sim_scenario_conf_grid = {
 
     "scooter_relocation": [True],
     "scooter_relocation_strategy": ["magic_relocation"],
+    "scooter_relocation_technique": [
+        frozenset({"window_width": 1}.items()),
+    ],
 
     "vehicle_relocation": [False],
     "vehicle_relocation_scheduling": [False],

@@ -2,7 +2,7 @@ import numpy as np
 
 sim_scenario_conf_grid = {
 
-    "n_vehicles": [850],
+    "n_vehicles": np.arange(1000, 10001, 1000),
 
     "time_estimation": [True],
     "queuing": [True],

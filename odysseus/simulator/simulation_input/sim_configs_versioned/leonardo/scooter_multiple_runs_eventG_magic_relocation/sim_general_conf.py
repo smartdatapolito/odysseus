@@ -1,7 +1,7 @@
 sim_general_conf_grid = {
 
     # Run configuration
-    "city": ["Louisville", "Minneapolis"],
+    "city": ["Louisville", "Minneapolis", "Kansas City"],
     "sim_run_mode": ["multiple_runs"],
 
     "data_source_id": ["city_open_data"],
@@ -17,8 +17,8 @@ sim_general_conf_grid = {
 
     # Time general parameters
     "year": [2019],
-    "month_start": [7],
-    "month_end": [8],
+    "month_start": [9],
+    "month_end": [10],
 
     "save_history": [False]
 }

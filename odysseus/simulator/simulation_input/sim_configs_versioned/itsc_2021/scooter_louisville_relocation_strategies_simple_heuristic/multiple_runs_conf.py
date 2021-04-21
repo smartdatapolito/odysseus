@@ -2,7 +2,7 @@ import numpy as np
 
 sim_scenario_conf_grid = {
 
-    "n_vehicles": [8350],
+    "n_vehicles": np.arange(100, 1001, 100),
 
     "time_estimation": [True],
     "queuing": [True],
@@ -36,41 +36,21 @@ sim_scenario_conf_grid = {
     "number of workers": [1000],
 
     "scooter_relocation": [True],
-    "scooter_relocation_strategy": ["proactive"],
+    "scooter_relocation_strategy": ["proactive, predictive"],
     "scooter_relocation_technique": [
         frozenset({
             "start": "delta",
             "end": "delta",
             "window_width": 1,
         }.items()),
-        frozenset({
-            "start": "delta",
-            "end": "delta",
-            "window_width": 2,
-        }.items()),
-        frozenset({
-            "start": "delta",
-            "end": "delta",
-            "window_width": 3,
-        }.items()),
-        frozenset({
-            "start": "delta",
-            "end": "delta",
-            "window_width": 6,
-        }.items()),
-        frozenset({
-            "start": "delta",
-            "end": "delta",
-            "window_width": 12,
-        }.items()),
     ],
 
     "vehicle_relocation": [False],
     "vehicle_relocation_scheduling": [False],
 
-    "n_relocation_workers": [1, 10],
+    "n_relocation_workers": np.arange(1, 11),
     "avg_relocation_speed": [20],  # km/h
-    "relocation_capacity": range(10, 51, 5),
+    #"relocation_capacity": [10],  # if not used -> simple heuristic
 
     "relocation_profitability_check": [False],
     "relocation_vehicle_consumption": [7],  # l/100km
@@ -78,7 +58,7 @@ sim_scenario_conf_grid = {
     "unlock_fee": [1],  # $
     "rent_fee": [0.15],  # $/min
     "avg_relocation_distance": [1],  # km
-    "avg_trip_duration": [10],  # min
+    "avg_trip_duration": [15],  # min
 
     "engine_type": ["electric"],
     "vehicle_model_name": ["generic e-scooter"],
