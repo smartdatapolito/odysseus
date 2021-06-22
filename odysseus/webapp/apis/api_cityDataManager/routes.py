@@ -133,8 +133,33 @@ def zone_test():
     return jsonify(summary)
 
 
+@api_cdm.route('/get-demand-data',methods=['GET'])
+def get_space_data():
+    COLLECTION = 'space_stats'
+    param_id = request.args.get("id",default = 'TEST')
+    graph = request.args.get("graph",default = 'all')
+    city = request.args.get("city",default = "Torino")
+    year = json.loads(request.args.get("year",default = "[2017]"))
+    month = json.loads(request.args.get("month",default = "[8]"))
+    print(city," ",year,"-",month)
+
+    _,collection = initialize_mongoDB(HOST,DATABASE,COLLECTION)
+    query = [
+        {
+            "$match": {"city":str(city),"year":{"$in":year},"month":{"$in":month}}
+        },
+        {
+            "$project": {
+                "_id": 0}
+        }
+        ]
+    
+    results = list(collection.aggregate(query))
+    return json.dumps(results, default=json_util.default)
+
+
 @api_cdm.route('/get-cdm-data',methods=['GET'])
-def get_data():
+def get_time_data():
     param_id = request.args.get("id",default = 'TEST')
     graph = request.args.get("graph",default = 'all')
     city = request.args.get("city",default = "Torino")
@@ -142,60 +167,17 @@ def get_data():
     month = json.loads(request.args.get("month",default = "[8]"))
     print(city," ",year,"-",month)
     _,collection = initialize_mongoDB(HOST,DATABASE,COLLECTION)
-    #query = [{"$match": {"city":str(city),"year":{"$in":year},"month":{"$in":month}}},{"$project": {"city":1,"year":1,"month":1,"day":1, "n_bookings": 1,"avg_duration":1,"_id": 0}},{"$sort":{"year":1,"month":1,"day":1}}]
     query = [
         {
             "$match": {"city":str(city),"year":{"$in":year},"month":{"$in":month}}
         },
         {
             "$project": {
-                "city":1,
-                "year":1,
-                "month":1,
-                "day":1,
-                "n_booking": 1,
-                'avg_duration':1, 
                 "_id": 0}
-        },
-        { 
-            '$unwind' : {'path': "$n_booking",'includeArrayIndex': "hour_bookings"}
-        },
-        { 
-            '$unwind' : {'path': "$avg_duration",'includeArrayIndex': "hour_duration"}
-        },
-        {
-            '$project': {
-                "year":1,
-                "month":1,
-                "day":1,
-                'n_booking':1, 
-                'avg_duration':1, 
-                'hour': "$hour_bookings",
-                'compare': {'$cmp': ['$hour_bookings', '$hour_duration']}}
-        },
-        {
-            '$match': {'compare': 0}
-        },
-        {
-            '$project':{
-                'date': { '$dateFromParts': {'year' : '$year', 'month' : '$month', 'day' : '$day', 'hour' : '$hour'}},
-                'n_booking':1, 
-                'avg_duration':1, 
-            }
         }
         ]
     
     results = list(collection.aggregate(query))
-    '''
-    if graph == 'all':
-        query = {"_id":param_id}
-        results = list(collection.find(query))
-    else:
-        query = [{"$match": {"_id":param_id}}, {"$project": {"_id" : "$_id", graph: 1}}]
-        results = list(collection.aggregate(query))
-    '''
-    print(results)
-    #return json.dumps(list(results))
     return json.dumps(results, default=json_util.default)
 
 
