@@ -31,6 +31,7 @@ class ScreenDemand(DashboardScreen):
         tessellation = tilers.tiler.get("squared", base_shape = base_shapes[self.city_name], meters=500)
         tessellation.tile_ID = tessellation.tile_ID.astype(int)
         self.grid = tessellation
+
         with st.spinner('Fetching the '+ self.city_name +' time collections from DB'):
             self.temp_data = self.get_temp_collection()
 
@@ -42,8 +43,8 @@ class ScreenDemand(DashboardScreen):
         param_list = list(self.temp_data.columns.difference(['city', 'date']))
 
         self.widget_list = [partial(st_functional_columns, [['date_input', "Inserisci la data di inizio analisi", _min, _min, _max], 
-                                                            ['date_input', "Inserisci la data di fine analisi", _max, _min, _max],
-                                                            [ "selectbox", "Scegli il parametro", param_list]])]
+                                                            ['date_input', "Inserisci la data di fine analisi", _max, _min, _max]])]#,
+                                                            #[ "selectbox", "Scegli il parametro", param_list]])]
         
     @st.cache(allow_output_mutation=True, show_spinner=False)
     def get_temp_collection(self):
@@ -122,12 +123,13 @@ class ScreenDemand(DashboardScreen):
 
     def show_charts(self):
 
-        start, end, stat_col = self.show_widgets()[0]
+        start, end = self.show_widgets()[0]
         if start>=end:
             st.error('End limit date cannot be before the start date of analysis. Retry')
         else:
             #og_points = self.filter_map_data(self.data, start, end)
 
             #map_df = filtered_df.rename(columns={'start_latitude':'lat', 'start_longitude':'lng', 'start_time':'datetime'})
+            #ChartMap(self.space_data, 'Heat Map', "This is a heatmap of the bookings during the month in exam. You can change the time interval also! The data analyst who thought about it is pretty smart, don't you think?", self.grid, start, end, tipo='heatmap', parametro=self.city_name).show_choropleth_mapbox()
 
             ChartMap(self.space_data, 'Heat Map', "This is a heatmap of the bookings during the month in exam. You can change the time interval also! The data analyst who thought about it is pretty smart, don't you think?", self.grid, start, end, tipo='heatmap', parametro=self.city_name).show_prova5()

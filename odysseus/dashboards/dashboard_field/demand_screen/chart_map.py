@@ -43,7 +43,7 @@ class ChartMap(DashboardChart, Thread):
 
         # aaa = self.og_data.loc[self.startDay:self.endDay]
         data_to_show = column
-        plot_df = self.og_data.loc[self.og_data['date'] == '2017-10-09']
+        plot_df = self.og_data#.loc[self.og_data['date'] == '2017-10-09']
         fig = px.choropleth_mapbox(plot_df,
                                 geojson=self.grid,
                                 locations=plot_df.tile_ID,
@@ -69,9 +69,9 @@ class ChartMap(DashboardChart, Thread):
                                 locations=self.og_data.tile_ID,
                                 #color="zone_id",
                                 opacity=0.5,
-                                center={"lat": 45.116177, "lon": 7.742615},
+                                center={"lat": 45.06, "lon":7.67},
                                 mapbox_style="open-street-map",
-                                zoom=10)
+                                zoom=11)
         fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
         fig.update(layout_coloraxis_showscale=False)
         return fig
@@ -102,7 +102,7 @@ class ChartMap(DashboardChart, Thread):
                 ).sum().asfreq('1D', fill_value=0)
 
         plot_df = line_plot[column]
-        fig = px.line(plot_df)
+        fig = px.bar(plot_df)
         fig.update_layout(
             xaxis_title="Time series",
             yaxis_title="---",
