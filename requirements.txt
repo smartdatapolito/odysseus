@@ -8,7 +8,7 @@ xlrd==1.2.0
 rtree==0.8.3
 pytz==2019.2
 xlsxwriter==1.2.1
-pyspark==3.0.0
+pyspark==3.2.2
 requests==2.25.1
 haversine==2.3.0
 xmltodict==0.12.0
